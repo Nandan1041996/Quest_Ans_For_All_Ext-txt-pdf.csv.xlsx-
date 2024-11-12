@@ -13,7 +13,7 @@ def wrap_text_preserve_new_line(text, width=110):
     gc.collect()
     return wrapped_text 
 
-def get_chain(llm,prompt,vector_index,ext):
+def get_chain(llm,prompt,vector_index):
 
     chain = RetrievalQA.from_chain_type(llm,
                                     input_key='question',
@@ -26,7 +26,7 @@ def get_chain(llm,prompt,vector_index,ext):
     gc.collect()
     return chain
 
-def get_answer(chain,query_text,ext):
+def get_answer(chain,query_text):
     ''' this function is used to retrive answer of given query_text
 
     Args:
@@ -51,7 +51,7 @@ def get_answer(chain,query_text,ext):
 
         res =wrap_text_preserve_new_line(translated)
         res_dict[tgt_lang] = res
-    del [chain,answer_dict,ext,tgt_lang_lst]
+    del [chain,answer_dict,tgt_lang_lst]
     gc.collect()
     return res_dict
 
