@@ -99,14 +99,16 @@ pydantic
                         </div>
                         <span class="feedback-error" style="color:red; display:none;">Please provide feedback.</span>
                     </div>
-                </div>               
+                </div>
+                
+                <!-- Popup Message -->
+                <div class="feedback-popup" style="display:none; position:fixed; 
+                top:50%; left:50%; transform:translate(-50%, -50%); background-color:#96DFF7; 
+                color:white; padding:10px; border-radius:5px;">
+                    Your feedback has been submitted successfully!
+                </div>            
             </div>
         </main>
-
-        <!-- Note below the panels -->
-        <div class="note">
-            <p><strong>Note:</strong> This chatbot is designed to work only with CSV files that contain two columns: <strong>Question</strong> and <strong>Answer</strong>. Please ensure your file follows this format for proper functionality.</p>
-        </div>   
     </div>
     <script src="script.js"></script>
 </body>
