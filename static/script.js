@@ -86,48 +86,108 @@ document.addEventListener('DOMContentLoaded', function () {
             // Scroll to the bottom of the chatbox
             resultBox.scrollTop = resultBox.scrollHeight;
 
-            // Send answer data to answers.json if user clicks correct or wrong
-            document.querySelectorAll('.feedback.correct').forEach((correctButton, index) => {
-                correctButton.addEventListener('click', function () {
-                    // Save correct answer in JSON
-                    const correctQuestion = document.querySelectorAll('.message.user')[index].textContent;
-                    const correctAnswer = document.querySelectorAll('.message.bot')[index].textContent;
 
-                    sendToAnswersJson(correctQuestion, correctAnswer, ""); // Human answer is empty for correct
-                    saveFeedback(correctQuestion, correctAnswer, true);
-                });
-            });
+           // Send answer data to answers.json if user clicks correct or wrong
+document.querySelectorAll('.feedback.correct').forEach((correctButton, index) => {
+    correctButton.addEventListener('click', function () {
+        // Save correct answer in JSON
+        const correctQuestion = document.querySelectorAll('.message.user')[index].textContent;
+        const correctAnswer = document.querySelectorAll('.message.bot')[index].textContent;
 
-            document.querySelectorAll('.feedback.wrong').forEach((wrongButton, index) => {
-                wrongButton.addEventListener('click', function () {
-                    // Show feedback box for wrong answers
-                    const feedbackBox = document.querySelectorAll('.feedback-box')[index];
-                    feedbackBox.style.display = 'block';
+        sendToAnswersJson(correctQuestion, correctAnswer, ""); // Human answer is empty for correct
+        saveFeedback(correctQuestion, correctAnswer, true);
+        
+        // Display "Thank you" popup for correct answer feedback
+        showSuccessPopup("Thank you for your Action.");
+    });
+});
 
-                    // Handle submit feedback
-                    const submitFeedbackButton = feedbackBox.querySelector('.submit-feedback');
-                    submitFeedbackButton.addEventListener('click', function () {
-                        const feedbackText = feedbackBox.querySelector('.feedback-text').value;
-                        const feedbackError = feedbackBox.querySelector('.feedback-error');
+document.querySelectorAll('.feedback.wrong').forEach((wrongButton, index) => {
+    wrongButton.addEventListener('click', function () {
+        // Show feedback box for wrong answers
+        const feedbackBox = document.querySelectorAll('.feedback-box')[index];
+        feedbackBox.style.display = 'block';
 
-                        // Check if feedback is empty
-                        if (feedbackText.trim() === '') {
-                            feedbackError.style.display = 'block'; // Show error message
-                        } else {
-                            feedbackError.style.display = 'none'; // Hide error message
+        // Handle submit feedback
+        const submitFeedbackButton = feedbackBox.querySelector('.submit-feedback');
+        submitFeedbackButton.addEventListener('click', function submitFeedbackHandler() {
+            const feedbackText = feedbackBox.querySelector('.feedback-text').value;
+            const feedbackError = feedbackBox.querySelector('.feedback-error');
 
-                            const wrongQuestion = document.querySelectorAll('.message.user')[index].textContent;
-                            const wrongAnswer = document.querySelectorAll('.message.bot')[index].textContent;
+            // Check if feedback is empty
+            if (feedbackText.trim() === '') {
+                feedbackError.style.display = 'block'; // Show error message
+            } else {
+                feedbackError.style.display = 'none'; // Hide error message
 
-                            sendToAnswersJson(wrongQuestion, wrongAnswer, feedbackText); // Include feedback
-                            saveFeedback(wrongQuestion, wrongAnswer, false, feedbackText);
+                const wrongQuestion = document.querySelectorAll('.message.user')[index].textContent;
+                const wrongAnswer = document.querySelectorAll('.message.bot')[index].textContent;
 
-                            // Hide the feedback box after submission
-                            feedbackBox.style.display = 'none';
-                        }
-                    });
-                });
-            });
+                sendToAnswersJson(wrongQuestion, wrongAnswer, feedbackText); // Include feedback
+                saveFeedback(wrongQuestion, wrongAnswer, false, feedbackText);
+
+                // Hide the feedback box after submission
+                feedbackBox.style.display = 'none';
+
+                // Display "Your feedback has been submitted successfully!" popup for wrong answer feedback
+                showSuccessPopup("Your feedback has been submitted successfully!");
+
+                // Remove the event listener to prevent multiple submissions for the same feedback
+                submitFeedbackButton.removeEventListener('click', submitFeedbackHandler);
+            }
+        });
+    });
+});
+
+// Function to display the success popup message
+function showSuccessPopup(message) {
+    const feedbackPopup = document.createElement('div');
+    feedbackPopup.classList.add('feedback-popup');
+    feedbackPopup.style.position = 'fixed';
+    feedbackPopup.style.top = '50%';
+    feedbackPopup.style.left = '50%';
+    feedbackPopup.style.transform = 'translate(-50%, -50%)';
+    feedbackPopup.style.backgroundColor = '#96DFF7';
+    feedbackPopup.style.color = 'black';
+    feedbackPopup.style.padding = '20px';
+    feedbackPopup.style.borderRadius = '5px';
+    feedbackPopup.style.zIndex = '1000';
+    feedbackPopup.textContent = message;
+
+    document.body.appendChild(feedbackPopup);
+
+    // Hide popup after 3 seconds
+    setTimeout(function () {
+        feedbackPopup.style.display = 'none';
+        document.body.removeChild(feedbackPopup);
+    }, 3000);
+}
+
+
+// Function to display the success popup message
+function showSuccessPopup(message) {
+    const feedbackPopup = document.createElement('div');
+    feedbackPopup.classList.add('feedback-popup');
+    feedbackPopup.style.position = 'fixed';
+    feedbackPopup.style.top = '40%';
+    feedbackPopup.style.left = '60%';
+    feedbackPopup.style.transform = 'translate(-50%, -50%)';
+    feedbackPopup.style.backgroundColor = '#96DFF7';
+    feedbackPopup.style.color = 'black';
+    feedbackPopup.style.padding = '5px';
+    feedbackPopup.style.borderRadius = '5px';
+    feedbackPopup.style.zIndex = '1000';
+    feedbackPopup.textContent = message;
+
+    document.body.appendChild(feedbackPopup);
+
+    // Hide popup after 3 seconds
+    setTimeout(function () {
+        feedbackPopup.style.display = 'none';
+        document.body.removeChild(feedbackPopup);
+    }, 3000);
+}
+
 
             // Clear the input text area after sending the question
             queryText.value = ''; 
